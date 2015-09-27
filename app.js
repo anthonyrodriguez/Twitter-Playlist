@@ -44,7 +44,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email user-library-read';
+  var scope = 'user-read-private user-read-email user-library-read playlist-modify-public playlist-modify-private';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -105,20 +105,35 @@ app.get('/callback', function(req, res) {
             }
             else {
                 userID = body.id;
+		var playlistID;
 	            console.log(userID);
 
-	            var playlistOptions = {
+	            var createPlaylistOptions = {
 	                url: 'https://api.spotify.com/v1/users/' + userID + '/playlists',
 	                headers: { 'Authorization': 'Bearer ' + access_token },
+		        body: JSON.stringify({'name': 'TEST TRAP QUEEN', 'public': false}),
 	                json: true
+		        
 	            };
 
-	            console.log(playlistOptions.url);
-
-	            request.get(playlistOptions, function(error, response, body) {
+	            request.post(createPlaylistOptions, function(error, response, body) {
 		            console.log(body);
+			    playlistID = body.id;
+			    var addTrapQueenOptions = {
+			   	url: 'https://api.spotify.com/v1/users/' + userID + '/playlists/' + playlistID + '/tracks',
+			    	headers: { 'Authorization': 'Bearer ' + access_token },
+			    	body: JSON.stringify({'uris': ['spotify:track:3twQx3psUMJKj4wna5d1zU']}),
+			    	json: true
+		    	    };
+		    
+		    	    request.post(addTrapQueenOptions, function(error, response, body) {
+			        console.log(body);
+		    	    });
 	            });
-	         }
+
+		    
+		    
+	    }
         });
 
 
