@@ -50,7 +50,6 @@ app.use(express.static(__dirname + '/public'))
    .use(cookieParser());
 
 app.get('/twitter', function(req, res) {
-  console.log(req.query.twitter_handle); 
   var params = {screen_name: req.query.twitter_handle};
   var hashtags = [];
   twit.get('statuses/user_timeline', params, function(error, tweets, response) {
@@ -101,7 +100,7 @@ app.get('/twitter', function(req, res) {
     };
 
     request.post(createPlaylistOptions, function(error, response, body) {
-	console.log(body);
+	//console.log(body);
 	playlistID = body.id; 
 	for (hashtag of new_hashtags) {
 	    //SEARCH FOR THE HASHTAG
@@ -112,32 +111,35 @@ app.get('/twitter', function(req, res) {
 	    };
 
 	    request.get(searchOptions, function(error, response, body) {
-		console.log("SEARCH RESULTS");
+		//console.log("SEARCH RESULTS");
 		if (typeof body !== 'undefined') {
-		    console.log(body);
+		    //console.log(body);
 
 		    var selectedTrack = null;
 		    //Get tracks to return, if any
 
 		    if (body.tracks !== undefined && body.tracks.items.length > 0){
 			//This track is to be added
-			console.log('Track to add: ');
+			//console.log('Track to add: ');
 //			console.log(body.tracks.items[0].name + '\n');
-			for (track of body.tracks.items){
-		    		console.log(track.name + '\n');
-			}
+			//for (track of body.tracks.items){
+		   // 		console.log(track.name + '\n');
+			//}
 		        selectedTrack = body.tracks.items[0];
 
 		        //Add track to playlist!
 		        var addSearchOptions = {
-			    url: 'https://api.spotify.com/v1/users/' + userID + '/playlists/' + playlistID + '/tracks',
-			    headers: { 'Authorization': 'Bearer ' + access_token },
-    			    body: JSON.stringify({'uris': ['spotify:track:' + selectedTrack.id]}),
-			    json: true
+			      url: 'https://api.spotify.com/v1/users/' + userID + '/playlists/' + playlistID + '/tracks',
+			      headers: { 'Authorization': 'Bearer ' + access_token },
+    			  body: JSON.stringify({'uris': ['spotify:track:' + selectedTrack.id]}),
+			      json: true
 		        };
 
-		        request.post(addSearchOptions, function(error, response, body) {
-			    console.log(body);
+		        console.log("addSearchOptions url: " + addSearchOptions.url);
+		        console.log("addSearchOptions headers: " + addSearchOptions.headers);
+		        console.log("addSearchOptions body: " + addSearchOptions.body);
+                request.post(addSearchOptions, function(error, response, body) {
+                    console.log(response +  " -------------- " + body);
 		        });	
 		    }
 		}
