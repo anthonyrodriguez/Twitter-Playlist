@@ -72,6 +72,9 @@
       </div>
     </div>
 
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+
+
     <script id="user-profile-template" type="text/x-handlebars-template">
       <h1 class="text">Logged in as {{display_name}}</h1>
       <div class="media">
@@ -93,7 +96,7 @@
       <br>
       <h4 class="text"> Enter a Twitter handle</h4>
       <h6 class="text"> (Omit the '@' symbol)</h6>
-          <form target="_blank" action="/twitter" method="get">
+          <form target="redirect" action="/feedback.html" method="get">
               <input type="text" name="twitter_handle"/>
               <br><br>
               <input class="btn btn-lg btn-primary btn-success" type="submit" value="submit" name="myForm"/>
