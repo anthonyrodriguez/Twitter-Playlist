@@ -55,27 +55,40 @@ app.get('/twitter', function(req, res) {
   var hashtags = [];
   twit.get('statuses/user_timeline', params, function(error, tweets, response) {
     if (!error) {
-      var i;
-      var hash_index;
+      var i,j;
       var words;
-      var j;
       for (i = 0; i < tweets.length; i++) {
         hash_index = tweets[i].text.search('#');
         words = tweets[i].text.split(/[\s,\n]+/);
-        for (j = 0; j < words.length; j++)
-        {
-          if (words[j].indexOf('#') > -1)
-          {
-            hashtags.push(words[j].substring(words[j].indexOf('#')+1));
+        for (j = 0; j < words.length; j++) {
+          if (words[j].indexOf('#') > -1) {
+            if (hashtags.indexOf(words[j].substring(words[j].indexOf('#')+1)) == -1) {
+              hashtags.push(words[j].substring(words[j].indexOf('#')+1));
+            }
           }
         }
       }
     }
-    else 
-    {
-      console.log(error);
+  else {
+    console.log("------------------------------");
+    console.log(error);
+  }
+  var i,j,element;
+  var new_hashtags = [];
+  for (i = 0; i < hashtags.length; i++) {
+    element = hashtags[i];
+    new_hashtags.push(element);
+    for (j = 1; j < element.length -1; j++) {
+      if (element.match(/[a-z]/i) && element[j] == element[j].toUpperCase() && element[j+1] == element[j+1].toLowerCase()) {
+        if (new_hashtags.indexOf(element.substring(0, j)) == -1) {
+          new_hashtags.push(element.substring(0,j)); }
+        if (new_hashtags.indexOf(element.substring(j)) == -1) ; {
+          new_hashtags.push(element.substring(j));
+        }
+      }
     }
-    console.log(hashtags);
+  }
+  console.log(new_hashtags);
 
     //SEARCH USING HASHTAGS
     var playlistID;
@@ -90,7 +103,7 @@ app.get('/twitter', function(req, res) {
     request.post(createPlaylistOptions, function(error, response, body) {
 	console.log(body);
 	playlistID = body.id; 
-	for (hashtag of hashtags) {
+	for (hashtag of new_hashtags) {
 	    //SEARCH FOR THE HASHTAG
 	    var searchOptions = {
 		url: 'https://api.spotify.com/v1/search?q=' + hashtag + '&type=track,artist,album',
@@ -106,7 +119,7 @@ app.get('/twitter', function(req, res) {
 		    var selectedTrack = null;
 		    //Get tracks to return, if any
 
-		    if ('tracks' in body && body.tracks.items.length > 0){
+		    if (body.tracks !== undefined && body.tracks.items.length > 0){
 			//This track is to be added
 			console.log('Track to add: ');
 //			console.log(body.tracks.items[0].name + '\n');
