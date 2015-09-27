@@ -93,10 +93,11 @@
       <br>
       <h4 class="text"> Enter a Twitter handle</h4>
       <h6 class="text"> (Omit the '@' symbol)</h6>
-          <form action="/twitter" method="get">
+          <form target="_blank" action="/twitter" method="get">
               <input type="text" name="twitter_handle"/>
               <br><br>
-              <input class="btn btn-lg btn-primary btn-success" type="submit" value="submit"/>
+              <input class="btn btn-lg btn-primary btn-success" type="submit" value="submit" name="myForm"/>
+              <input type="hidden" name="redirect" value="https://www.google.com">
           </form>
 
 
