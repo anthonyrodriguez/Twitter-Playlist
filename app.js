@@ -167,6 +167,18 @@ app.get('/callback', function(req, res) {
 		    	    request.post(addTrapQueenOptions, function(error, response, body) {
 			        console.log(body);
 		    	    });
+
+			    //SEARCH FOR "Adulthood"
+			    var searchOptions = {
+				url: 'https://api.spotify.com/v1/search?q=' + 'Adulthood',
+			        headers: {'Authorization': 'Bearer ' + access_token },
+			        json: true
+			    };
+
+			    request.get(searchOptions, function(error, response, body) {
+				console.log("SEARCH RESULTS");
+				console.log(body);
+			    });
 	            });
 
 		    
