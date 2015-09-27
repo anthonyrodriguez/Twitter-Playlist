@@ -1,11 +1,19 @@
 <!doctype html>
 <html>
   <head>
-    <title>Example of the Authorization Code flow with Spotify</title>
+    <title>Twittify</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
     <style type="text/css">
       #login, #loggedin {
         display: none;
+      }
+      .container {
+        margin: auto;
+        width: 60%;
+        border:3px solid #8AC007;
+        padding: 20px;
+        background: white;
       }
       .text-overflow {
         overflow: hidden;
@@ -13,14 +21,47 @@
         white-space: nowrap;
         width: 500px;
       }
+      .img-circle {
+        display: block;
+        margin: 0 auto;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 50%;
+        border:3px solid #8AC007;
+        padding: 10px;
+      }
+
+      .text{
+        color: #464656;
+        text-align: center;
+      }
+
+      body{
+        background-color: #1A1A1B;
+      }
+
+      input[type="text"] {
+             display: block;
+             margin : 0 auto;
+        }
+
+      input[type="submit"] {
+             display: block;
+             margin : 0 auto;
+        }
+
+
     </style>
   </head>
 
   <body>
     <div class="container">
       <div id="login">
-        <h1>This is an example of the Authorization Code flow</h1>
-        <a href="/login" class="btn btn-primary">Log in with Spotify</a>
+        <h1 class="text">Twittify!</h1> <br>
+        <p class="text">Twittify generates Spotify playlists instantly based on the hashtags of any Twitter account<p>
+        <p class="text">Simply log in to your Spotify account to begin!</p>
+        <br>
+        <p style="text-align:center;"><a href="/login" class="btn btn-primary">Log in with Spotify</a>
       </div>
       <div id="loggedin">
         <div id="user-profile">
@@ -32,10 +73,10 @@
     </div>
 
     <script id="user-profile-template" type="text/x-handlebars-template">
-      <h1>Logged in as {{display_name}}</h1>
+      <h1 class="text">Logged in as {{display_name}}</h1>
       <div class="media">
-        <div class="pull-left">
-          <img class="media-object" width="150" src="{{images.0.url}}" />
+        <div>
+          <img class="img-circle" width="150" src="{{images.0.url}}" />
         </div>
         <div class="media-body">
           <dl class="dl-horizontal">
@@ -49,12 +90,16 @@
           </dl>
         </div>
       </div>
-      <h4> Enter a Twitter handle (Omit the '@' symbol)</h4>
+      <br>
+      <h4 class="text"> Enter a Twitter handle</h4>
+      <h6 class="text"> (Omit the '@' symbol)</h6>
           <form action="/twitter" method="get">
               <input type="text" name="twitter_handle"/>
               <br><br>
               <input class="btn btn-lg btn-primary btn-success" type="submit" value="submit"/>
           </form>
+
+
     </script>
 
     <script id="oauth-template" type="text/x-handlebars-template">
@@ -144,4 +189,5 @@
       })();
     </script>
 </html>
+
 
