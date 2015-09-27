@@ -1,6 +1,6 @@
 # Twitter-Playlist
 
-Requirements:
-node.js
-twitter (Twitter API client library for node.js)
+Requirements:\n
+node.js\n
+twitter (Twitter API client library for node.js)\n
     npm install twitter
