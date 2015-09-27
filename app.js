@@ -101,6 +101,7 @@ app.get('/twitter', function(req, res) {
 
     request.post(createPlaylistOptions, function(error, response, body) {
 	//console.log(body);
+	
 	playlistID = body.id; 
 	for (hashtag of new_hashtags) {
 	    //SEARCH FOR THE HASHTAG
@@ -109,7 +110,7 @@ app.get('/twitter', function(req, res) {
 	        headers: {'Authorization': 'Bearer ' + access_token },
 	        json: true
 	    };
-
+            
 	    request.get(searchOptions, function(error, response, body) {
 		//console.log("SEARCH RESULTS");
 		if (typeof body !== 'undefined') {
@@ -126,25 +127,35 @@ app.get('/twitter', function(req, res) {
 		   // 		console.log(track.name + '\n');
 			//}
 		        selectedTrack = body.tracks.items[0];
-
+			console.log('ONE!!!!!!!!!!!!!!!!!!!');
 		        //Add track to playlist!
 		        var addSearchOptions = {
 			      url: 'https://api.spotify.com/v1/users/' + userID + '/playlists/' + playlistID + '/tracks',
 			      headers: { 'Authorization': 'Bearer ' + access_token },
-    			  body: JSON.stringify({'uris': ['spotify:track:' + selectedTrack.id]}),
+    			      body: JSON.stringify({'uris': ['spotify:track:' + selectedTrack.id]}),
 			      json: true
 		        };
-
+			console.log('TWO!!!!!!!!!!!!!!!!!!!');
 		        console.log("addSearchOptions url: " + addSearchOptions.url);
 		        console.log("addSearchOptions headers: " + addSearchOptions.headers);
 		        console.log("addSearchOptions body: " + addSearchOptions.body);
-                request.post(addSearchOptions, function(error, response, body) {
+			setTimeout(function(){
+    //do what you need here
+    var done = false;
+    request.post(addSearchOptions, function(error, response, body) {
+			console.log('THREEEEEEEEEEEEEEEEEEEEEE');
                     console.log(response +  " -------------- " + body);
-		        });	
-		    }
-		}
+		    done = true;
 
+		    
+		        });
+}, 500);
+                	
+		    
+		}
+}
 	    });
+
 	}
 
 			    
