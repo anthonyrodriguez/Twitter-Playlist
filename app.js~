@@ -24,6 +24,9 @@ var twit = new Twitter({
         access_token_secret: 'k46LXk8aGlalP0SY1TtRLS4hstVuwVPtZgJyfaODWMj6v'
 });
 
+var access_token;
+var userID;
+
 /**
  * Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
@@ -73,6 +76,65 @@ app.get('/twitter', function(req, res) {
       console.log(error);
     }
     console.log(hashtags);
+
+    //SEARCH USING HASHTAGS
+    var playlistID;
+    var createPlaylistOptions = {
+	    url: 'https://api.spotify.com/v1/users/' + userID + '/playlists',
+	    headers: { 'Authorization': 'Bearer ' + access_token },
+	    body: JSON.stringify({'name': params.screen_name + ' - Twitlist Playlist', 'public': false}),
+	    json: true
+
+    };
+
+    request.post(createPlaylistOptions, function(error, response, body) {
+	console.log(body);
+	playlistID = body.id; 
+	for (hashtag of hashtags) {
+	    //SEARCH FOR THE HASHTAG
+	    var searchOptions = {
+		url: 'https://api.spotify.com/v1/search?q=' + hashtag + '&type=track,artist,album',
+	        headers: {'Authorization': 'Bearer ' + access_token },
+	        json: true
+	    };
+
+	    request.get(searchOptions, function(error, response, body) {
+		console.log("SEARCH RESULTS");
+		if (typeof body !== 'undefined') {
+		    console.log(body);
+
+		    var selectedTrack = null;
+		    //Get tracks to return, if any
+
+		    if ('tracks' in body && body.tracks.items.length > 0){
+			//This track is to be added
+			console.log('Track to add: ');
+//			console.log(body.tracks.items[0].name + '\n');
+			for (track of body.tracks.items){
+		    		console.log(track.name + '\n');
+			}
+		        selectedTrack = body.tracks.items[0];
+
+		        //Add track to playlist!
+		        var addSearchOptions = {
+			    url: 'https://api.spotify.com/v1/users/' + userID + '/playlists/' + playlistID + '/tracks',
+			    headers: { 'Authorization': 'Bearer ' + access_token },
+    			    body: JSON.stringify({'uris': ['spotify:track:' + selectedTrack.id]}),
+			    json: true
+		        };
+
+		        request.post(addSearchOptions, function(error, response, body) {
+			    console.log(body);
+		        });	
+		    }
+		}
+
+	    });
+	}
+
+			    
+    });
+    res.send();
   });
 });
 
@@ -125,8 +187,8 @@ app.get('/callback', function(req, res) {
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
 
-        var access_token = body.access_token,
-            refresh_token = body.refresh_token;
+        access_token = body.access_token,
+        refresh_token = body.refresh_token;
 
         var options = {
           url: 'https://api.spotify.com/v1/me',
@@ -134,55 +196,14 @@ app.get('/callback', function(req, res) {
           json: true
         };
 
-	    var userID;
-
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
             if (error) {
                 console.log('-------------------------2--------------------' + error);
             }
             else {
-                userID = body.id;
-		var playlistID;
-	            console.log(userID);
-
-	            var createPlaylistOptions = {
-	                url: 'https://api.spotify.com/v1/users/' + userID + '/playlists',
-	                headers: { 'Authorization': 'Bearer ' + access_token },
-		        body: JSON.stringify({'name': 'TEST TRAP QUEEN', 'public': false}),
-	                json: true
-		        
-	            };
-
-	            request.post(createPlaylistOptions, function(error, response, body) {
-		            console.log(body);
-			    playlistID = body.id;
-			    var addTrapQueenOptions = {
-			   	url: 'https://api.spotify.com/v1/users/' + userID + '/playlists/' + playlistID + '/tracks',
-			    	headers: { 'Authorization': 'Bearer ' + access_token },
-			    	body: JSON.stringify({'uris': ['spotify:track:3twQx3psUMJKj4wna5d1zU']}),
-			    	json: true
-		    	    };
-		    
-		    	    request.post(addTrapQueenOptions, function(error, response, body) {
-			        console.log(body);
-		    	    });
-
-			    //SEARCH FOR "Adulthood"
-			    var searchOptions = {
-				url: 'https://api.spotify.com/v1/search?q=' + 'Adulthood',
-			        headers: {'Authorization': 'Bearer ' + access_token },
-			        json: true
-			    }
-
-			    request.get(searchOptions, function(error, response, body) {
-				console.log("SEARCH RESULTS");
-				console.log(body);
-			    }
-	            });
-
-		    
-		    
+                    userID = body.id;
+		    console.log(userID);
 	    }
         });
 
