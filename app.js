@@ -16,6 +16,14 @@ var client_id = '4ef013b9023c404ba497f8b3cadf4c45'; // Your client id
 var client_secret = '92904c113de14c02911640d0723a87d6'; // Your client secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
+var Twitter = require('twitter');
+var twit = new Twitter({
+        consumer_key: '9lW1GFRuGteLqyK5zspP1LFGV',
+        consumer_secret: 'AzHnRbM2n82Dsmzf5UBYmaLFDJmnq0zDGZYELzBgtfPkFUXauz',
+        access_token_key: '3696735733-R7RcuvkMjiu5Tq3oG2ZUMMC6YiXayqE20f6WkyR',
+        access_token_secret: 'k46LXk8aGlalP0SY1TtRLS4hstVuwVPtZgJyfaODWMj6v'
+});
+
 /**
  * Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
@@ -37,6 +45,36 @@ var app = express();
 
 app.use(express.static(__dirname + '/public'))
    .use(cookieParser());
+
+app.get('/twitter', function(req, res) {
+  console.log(req.query.twitter_handle); 
+  var params = {screen_name: req.query.twitter_handle};
+  var hashtags = [];
+  twit.get('statuses/user_timeline', params, function(error, tweets, response) {
+    if (!error) {
+      var i;
+      var hash_index;
+      var words;
+      var j;
+      for (i = 0; i < tweets.length; i++) {
+        hash_index = tweets[i].text.search('#');
+        words = tweets[i].text.split(/[\s,\n]+/);
+        for (j = 0; j < words.length; j++)
+        {
+          if (words[j].indexOf('#') > -1)
+          {
+            hashtags.push(words[j].substring(words[j].indexOf('#')+1));
+          }
+        }
+      }
+    }
+    else 
+    {
+      console.log(error);
+    }
+    console.log(hashtags);
+  });
+});
 
 app.get('/login', function(req, res) {
 
