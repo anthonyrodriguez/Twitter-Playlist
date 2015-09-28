@@ -18,10 +18,10 @@ var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
 var Twitter = require('twitter');
 var twit = new Twitter({
-        consumer_key: '9lW1GFRuGteLqyK5zspP1LFGV',
-        consumer_secret: 'AzHnRbM2n82Dsmzf5UBYmaLFDJmnq0zDGZYELzBgtfPkFUXauz',
-        access_token_key: '3696735733-R7RcuvkMjiu5Tq3oG2ZUMMC6YiXayqE20f6WkyR',
-        access_token_secret: 'k46LXk8aGlalP0SY1TtRLS4hstVuwVPtZgJyfaODWMj6v'
+        consumer_key: 'CONSUMER_ID',
+        consumer_secret: 'CONSUMER_SECRET',
+        access_token_key: 'ACCESS_TOKEN_KEY',
+        access_token_secret: 'ACCESS_TOKEN_SECRET'
 });
 
 var access_token;
@@ -135,10 +135,6 @@ app.get('/twitter', function(req, res) {
     			      body: JSON.stringify({'uris': ['spotify:track:' + selectedTrack.id]}),
 			      json: true
 		        };
-			console.log('TWO!!!!!!!!!!!!!!!!!!!');
-		        console.log("addSearchOptions url: " + addSearchOptions.url);
-		        console.log("addSearchOptions headers: " + addSearchOptions.headers);
-		        console.log("addSearchOptions body: " + addSearchOptions.body);
 			setTimeout(function(){
     //do what you need here
     var done = false;
