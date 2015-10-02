@@ -1,6 +1,7 @@
 # Twitter-Playlist (Twitify)
 
 How Twitify works:
+<br>
 1. Sign in with your Spotify premium account.
 <br>
 2. Enter the Twitter screen name of any profile.
