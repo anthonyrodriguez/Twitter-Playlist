@@ -2,7 +2,9 @@
 
 How Twitify works:
 1. Sign in with your Spotify premium account.
+<br>
 2. Enter the Twitter screen name of any profile.
+<br>
 3. Twitify will scan through this user's tweets and create a playlist for you based on the user's hashtags
 
 <h4>Requirements:</h4>
